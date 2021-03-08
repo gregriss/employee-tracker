@@ -18,7 +18,7 @@ connection.connect( (err) => {
 
 // ask user initial questions 
 function beginQuestions(){
-    console.log("Working?");
+    // console.log("Working?");
 
     // inquirer prompt for questions
     inquirer.prompt([
@@ -26,10 +26,65 @@ function beginQuestions(){
             type: "list",
             message: "What would you like to do?",
             name: "choice",
-            choices: ["Add a department","Add a role","View ALL employees","View ALL Employees by Department","View All Employees by Manager","Add Employee","Remove Employee","Update Employee Role","Update Employee Manager"]
+            choices: ["Add a Department","Add a Role","Add an Employee","View All Departments","View All Roles","View ALL Employees by Department","View All Employees by Manager","Remove a Department","Remove a Role","Remove Employee","Update Employee Role","Update Employee Manager"]
         }
     ])
-    .then( answers => {
-        console.log(answers);
+    .then( answer => {
+        console.log(answer);
+        if (answer.choice === "Add a Department") {
+            console.log("Great! Let's add a department.");
+            addDeptQuestions();
+        }
+        else if (answer.choice === "Add a Role") {
+            console.log("Great! Let's add a Role.");
+            addRoleQuestions();
+        } 
+        else if (answer.choice === "Add an Employee") {
+            console.log("Great! Let's add an employee.");
+            addEmployeeQuestions();
+        }
+
     });
 }
+
+function addDeptQuestions() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which Department would you like to add?",
+            name: "department",
+            choices: ["Software","Marketing","Custodial","Management"]
+        }
+    ])
+    .then(answer => {
+        console.log(answer);
+    });
+}
+
+function addRoleQuestions() {
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "Which Role would you like to add?",
+            name: "role",
+            choices: ["Engineer","Intern","Secretary"]
+        }
+    ])
+    .then(answer => {
+        console.log(answer);
+    });
+};
+
+function addEmployeeQuestions() {
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What's the name of the employee?",
+            name: "employee"
+        }
+    ])
+    .then(answer => {
+        console.log("The new employee's name is " + answer);
+    });
+};
+
