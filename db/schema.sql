@@ -28,3 +28,4 @@ CREATE TABLE employees(
     manager_id INT,
     PRIMARY KEY(id)
 );
+

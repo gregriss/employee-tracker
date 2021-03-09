@@ -1,6 +1,11 @@
+// require inquirer, mysql, and console.table packages
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const console_table = require("console.table");
+// requiring class constructors for department, role, and employee
+const department = require('./department');
+const role = require('./role');
+const employee = require('./employee');
 
 // connect to the database
 const connection = mysql.createConnection({
@@ -18,42 +23,41 @@ connection.connect( (err) => {
 
 // ask user initial questions 
 function beginQuestions(){
-    // console.log("Working?");
 
     // inquirer prompt for questions
     inquirer.prompt([
         {
             type: "list",
             message: "What would you like to do?",
-            name: "choice",
+            name: "begin",
             choices: ["Add a Department","Add a Role","Add an Employee","View All Departments","View All Roles","View ALL Employees by Department","View All Employees by Manager","Remove a Department","Remove a Role","Remove Employee","Update Employee Role","Update Employee Manager"]
         }
     ])
     .then( answer => {
         console.log(answer);
-        if (answer.choice === "Add a Department") {
+        if (answer.begin === "Add a Department") {
             console.log("Great! Let's add a department.");
-            addDeptQuestions();
+            addDepartmentQuestions();
         }
-        else if (answer.choice === "Add a Role") {
+        else if (answer.begin === "Add a Role") {
             console.log("Great! Let's add a Role.");
             addRoleQuestions();
         } 
-        else if (answer.choice === "Add an Employee") {
+        else if (answer.begin === "Add an Employee") {
             console.log("Great! Let's add an employee.");
             addEmployeeQuestions();
         }
 
     });
-}
+};
 
-function addDeptQuestions() {
+function addDepartmentQuestions() {
     inquirer.prompt([
         {
             type: "list",
             message: "Which Department would you like to add?",
             name: "department",
-            choices: ["Software","Marketing","Custodial","Management"]
+            choices: ["Management","Software","Production","Sales","Marketing","Purchasing","Human Resources"]
         }
     ])
     .then(answer => {
@@ -68,10 +72,16 @@ function addRoleQuestions() {
             message: "Which Role would you like to add?",
             name: "role",
             choices: ["Engineer","Intern","Secretary"]
+        },
+        {
+            type: "input",
+            message: "What is the salary for this role?",
+            name: "salary"
         }
     ])
-    .then(answer => {
-        console.log(answer);
+    .then(answers => {
+        console.log(answers.role);
+        console.log(answers.salary);
     });
 };
 
@@ -79,12 +89,19 @@ function addEmployeeQuestions() {
     inquirer.prompt([
         {
             type: "input",
-            message: "What's the name of the employee?",
-            name: "employee"
+            message: "What's the employee's first name?",
+            name: "first"
+        },
+        {
+            type: "input",
+            message: "What's the employee's last name?",
+            name: "last"
         }
     ])
-    .then(answer => {
-        console.log("The new employee's name is " + answer);
+    .then(answers => {
+        console.log("The new employee's name is " + answers.first + " " + answers.last);
     });
 };
+
+
 
