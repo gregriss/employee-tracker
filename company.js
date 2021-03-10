@@ -1,11 +1,11 @@
 // require inquirer, mysql, and console.table packages
-const inquirer = require("inquirer");
-const mysql = require("mysql");
-const console_table = require("console.table");
+const inquirer = require('inquirer');
+const mysql = require('mysql');
+const console_table = require('console.table');
 // requiring class constructors for department, role, and employee
-const department = require('./department');
-const role = require('./role');
-const employee = require('./employee');
+const department = require('./assets/department');
+const role = require('./assets/role');
+const employee = require('./assets/employee');
 
 // connect to the database
 const connection = mysql.createConnection({
@@ -17,7 +17,12 @@ const connection = mysql.createConnection({
 });
 
 connection.connect( (err) => {
-    if(err) throw err;
+    if(err) {
+        console.error(err);
+        return;
+    }
+
+    console.log("Connected as ID " + connection.threadId);
     beginQuestions();
 });
 
@@ -46,6 +51,10 @@ function beginQuestions(){
         else if (answer.begin === "Add an Employee") {
             console.log("Great! Let's add an employee.");
             addEmployeeQuestions();
+        }
+        else if (answer.begin === "View All Departments") {
+            console.log("Here are all the Departments");
+            viewDepartments();
         }
 
     });
@@ -103,5 +112,6 @@ function addEmployeeQuestions() {
     });
 };
 
-
-
+function viewDepartments() {
+    
+}
