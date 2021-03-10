@@ -70,7 +70,7 @@ function addDepartmentQuestions() {
         }
     ])
     .then(answer => {
-        console.log(answer);
+        console.table(answer);
     });
 }
 
@@ -89,8 +89,9 @@ function addRoleQuestions() {
         }
     ])
     .then(answers => {
-        console.log(answers.role);
-        console.log(answers.salary);
+        console.table([{role: answers.role}, {salary: answers.salary}]);
+        // console.table(answers.salary);
+        return;
     });
 };
 
@@ -108,7 +109,11 @@ function addEmployeeQuestions() {
         }
     ])
     .then(answers => {
-        console.log("The new employee's name is " + answers.first + " " + answers.last);
+        // console.log("The new employee's name is " + answers.first + " " + answers.last);
+        const values = [
+            [answers.first, answers.last]
+        ];
+        console.table(['First Name', 'Last Name'], values);
     });
 };
 
