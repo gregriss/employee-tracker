@@ -3,9 +3,14 @@ const inquirer = require('inquirer');
 const mysql = require('mysql');
 const console_table = require('console.table');
 // requiring class constructors for department, role, and employee
-const department = require('./assets/department');
-const role = require('./assets/role');
-const employee = require('./assets/employee');
+const Department = require('./assets/department');
+const Role = require('./assets/role');
+const Employee = require('./assets/employee');
+// const { createPromptModule } = require('inquirer');
+
+const departments = [];
+const roles = [];
+const employees = [];
 
 // connect to the database
 const connection = mysql.createConnection({
@@ -71,25 +76,25 @@ function beginQuestions(){
 function addDepartmentQuestions() {
     inquirer.prompt([
         {
-            type: "list",
+            type: "input",
             message: "Which Department would you like to add?",
-            name: "department",
-            choices: ["Engineering","Finance","Human Resources","Marketing","Sales"]
+            name: "department"
+            // choices: ["Engineering","Finance","Human Resources","Marketing","Sales"]
         }
     ])
     .then(answer => {
-        console.table(answer);
-        postData();
+        // console.table(answer.department);
+        createDepartment(answer.department);
     });
 };
 
 function addRoleQuestions() {
     inquirer.prompt([
         {
-            type: "list",
+            type: "input", // was "list" with specific options
             message: "Which Role would you like to add?",
-            name: "role",
-            choices: ["Engineer","Intern","Secretary"]
+            name: "title"
+            // choices: ["Engineer","Intern","Secretary"]
         },
         {
             type: "input",
@@ -98,9 +103,10 @@ function addRoleQuestions() {
         }
     ])
     .then(answers => {
-        console.table([{role: answers.role}, {salary: answers.salary}]);
-        // console.table(answers.salary);
-        return;
+        // console.table([{role: answers.role}, {salary: answers.salary}]);
+        const role = new Role(answers.title, answers.salary);
+        createRole(answers);
+        // return;
     });
 };
 
@@ -161,6 +167,35 @@ function viewEmployees() {
     });
 };
 
-function postData() {
-
+function createDepartment(data) {
+    console.log("Adding new Department...\n");
+    connection.query(
+        "INSERT INTO departments SET ?",
+        {
+            name: data
+        },
+        function (err, res) {
+            if (err) throw err;
+            console.log(res.affectedRows + " Department inserted!\n");
+            connection.end();
+        }
+    );
 }
+
+function createRole(data) {
+    console.log("Adding new Role...\n");
+    connection.query(
+        "INSERT INTO roles SET ?",
+        {
+            title: data.title,
+            salary: data.salary 
+        },
+        function (err, res) {
+            if (err) throw err;
+            console.log(data.title, data.salary);
+            console.log(res.affectedRows + " Role inserted!\n");
+            connection.end();
+        }
+    );
+}
+
