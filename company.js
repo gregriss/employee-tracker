@@ -56,7 +56,15 @@ function beginQuestions(){
             console.log("Here are all the Departments");
             viewDepartments();
         }
-
+        else if (answer.begin === "View All Roles") {
+            console.log("Here are the roles that have been entered");
+            viewRoles();
+        }
+        // this can eventually be "View All Employees by Department", using some kind of table join I think
+        else if (answer.begin === "View All Employees") {
+            console.log("Here are all employees in the database");
+            viewEmployees();
+        }
     });
 };
 
@@ -66,13 +74,14 @@ function addDepartmentQuestions() {
             type: "list",
             message: "Which Department would you like to add?",
             name: "department",
-            choices: ["Management","Software","Production","Sales","Marketing","Purchasing","Human Resources"]
+            choices: ["Engineering","Finance","Human Resources","Marketing","Sales"]
         }
     ])
     .then(answer => {
         console.table(answer);
+        postData();
     });
-}
+};
 
 function addRoleQuestions() {
     inquirer.prompt([
@@ -106,17 +115,52 @@ function addEmployeeQuestions() {
             type: "input",
             message: "What's the employee's last name?",
             name: "last"
+        },
+        {
+            type: 'list',
+            message: "What is the employee's role?",
+            choices: ['Engineer','Accountant','Lawyer','Salesperson'],
+            name: "role"
+        },
+        {
+            type: 'input',
+            message: "Who is the employee's Manager?",
+            name: 'manager'
         }
     ])
     .then(answers => {
         // console.log("The new employee's name is " + answers.first + " " + answers.last);
         const values = [
-            [answers.first, answers.last]
+            [answers.first, answers.last, answers.role, answers.manager]
         ];
-        console.table(['First Name', 'Last Name'], values);
+        console.table(['First Name', 'Last Name', 'Role','Manager'], values);
     });
 };
 
 function viewDepartments() {
-    
+    connection.query("SELECT * FROM departments", function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        connection.end();
+    });
+};
+
+function viewRoles() {
+    connection.query("SELECT * FROM roles", function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        connection.end();
+    });
+};
+
+function viewEmployees() {
+    connection.query("SELECT * FROM employees", function(err, res) {
+        if (err) throw err;
+        console.table(res);
+        connection.end();
+    });
+};
+
+function postData() {
+
 }
