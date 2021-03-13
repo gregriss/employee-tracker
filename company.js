@@ -37,7 +37,7 @@ function beginQuestions() {
             type: "list",
             message: "What would you like to do?",
             name: "begin",
-            choices: ["Add a Department", "Add a Role", "Add an Employee", "View All Departments", "View All Roles", "View All Employees", "View All Employees by Manager", "Update Employee Role", "Remove a Department", "Remove a Role", "Remove Employee", "Update Employee Manager"] // will have View All Employees by Department
+            choices: ["Add a Department", "Add a Role", "Add an Employee", "View All Departments", "View All Roles", "View All Employees", "Update Employee Role", "End","Remove a Department", "Remove a Role", "Remove Employee", "Update Employee Manager","View All Employees By Manager"] // will have View All Employees by Department
         }
     ])
         .then(answer => {
@@ -71,6 +71,9 @@ function beginQuestions() {
                 console.log("Okay, let's update an employee's role.");
                 // updateRoleQuestions();
                 GetRolesAndUpdate();
+            }
+            else if (answer.begin === "End") {
+                connection.end();
             }
         })
         .catch(error => {
@@ -185,7 +188,8 @@ function createDepartment(data) {
         function (err, res) {
             if (err) throw err;
             console.log(res.affectedRows + " Department inserted!\n");
-            connection.end();
+            beginQuestions();
+            // connection.end();
         }
     );
 }
@@ -197,6 +201,7 @@ function createRole(data) {
         {
             title: data.title,
             salary: data.salary,
+            role: data.role
             // department_id: 
         },
         function (err, res) {
@@ -205,18 +210,23 @@ function createRole(data) {
             const values = [[data.title, data.salary]];
             console.table(['Role', 'Salary'], values);
             console.log(res.affectedRows + " Role inserted!\n");
-            connection.end();
+            beginQuestions();
+            // connection.end();
         }
     );
 }
 
 function createEmployee(data) {
+    let roleTitlesArr = [];
     // make new query to roles table to get id for "Lead engineer"
     // SELECT id FROM roles WHERE title = data.role 
     connection.query(
+        // "UPDATE employees SET ? WHERE ? AND ?",
         "INSERT INTO employees SET ?", [
             {
-                first_name, last_name, role_id
+                first_name: data.first,
+                last_name: data.last,
+                role_id
             }
         ],
         // {
@@ -239,7 +249,8 @@ function createEmployee(data) {
                 (err, res) => {
                     if (err) throw err;
                     console.log(res.affectedRows + " Role inserted!\n");
-                    connection.end();
+                    beginQuestions();
+                    // connection.end();
                 }
             )
         }
@@ -250,7 +261,8 @@ function viewDepartments() {
     connection.query("SELECT * FROM departments", function (err, res) {
         if (err) throw err;
         console.table(res);
-        connection.end();
+        beginQuestions();
+        // connection.end();
     });
 };
 
@@ -259,7 +271,8 @@ function viewRoles() {
         if (err) throw err;
         console.table("Here are the roles that have been entered");
         console.table(res);
-        connection.end();
+        beginQuestions();
+        // connection.end();
     });
 };
 // this code might help me do JOIN I need to show employees by department, etc.
@@ -269,32 +282,18 @@ function viewRoles() {
 function viewEmployees() {
     connection.query("SELECT * FROM employees", function (err, res) {
         if (err) throw err;
-        let role = null;
-        if (role_id = 1) {
-            role === "Lead Engineer";
-        }
-        else if (role_id = 2) {
-            role === "Software Engineer";
-        }
-        else if (role_id = 3) {
-            role === "Sales Lead";
-        }
-        else if (role_id = 4) {
-            role === "Salesperson";
-        }
-        else if (role_id = 5) {
-            role === "Accountant";
-        }
-        else if (role_id = 6) {
-            role === "Financial Analyst";
-        }
+        // let role = null;
+        // if (role_id = 1) {
+        //     role === "Lead Engineer";
+        
         console.table(res);
-        connection.end();
+        beginQuestions();
+        // connection.end();
     });
 };
 
 function GetRolesAndUpdate() {
-    var roleTitlesArr = [];
+    let roleTitlesArr = [];
     connection.query("SELECT title FROM roles", (err, results) => {
         console.log(results);
         results.forEach(title => {
