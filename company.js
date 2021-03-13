@@ -69,7 +69,8 @@ function beginQuestions() {
             }
             else if (answer.begin === "Update Employee Role") {
                 console.log("Okay, let's update an employee's role.");
-                updateRoleQuestions();
+                // updateRoleQuestions();
+                GetRolesAndUpdate();
             }
         })
         .catch(error => {
@@ -213,19 +214,23 @@ function createEmployee(data) {
     // make new query to roles table to get id for "Lead engineer"
     // SELECT id FROM roles WHERE title = data.role 
     connection.query(
-        "INSERT INTO employees SET ?",
-        {
-            first_name: data.first,
-            last_name: data.last,
-            // role_id: role_id
-            // manager_id: data.manager
-        },
-        function (err, res) {
+        "INSERT INTO employees SET ?", [
+            {
+                first_name, last_name, role_id
+            }
+        ],
+        // {
+        //     first_name: data.first,
+        //     last_name: data.last,
+        //     // role_id: role_id
+        //     // manager_id: data.manager
+        // },
+        (err, res) => {
             if (err) throw err;
             // const values = [[data.first, data.last, data.role]] // add data.manager
             //     console.table(['First Name', 'Last Name','Role'], values); // add 'Manager'
             //     console.log(res.affectedRows + " Role inserted!\n");
-
+            beginQuestions();
             connection.query(
                 "SELECT id FROM roles WHERE title = ?",
                 {
@@ -288,7 +293,18 @@ function viewEmployees() {
     });
 };
 
-function updateRoleQuestions() {
+function GetRolesAndUpdate() {
+    var roleTitlesArr = [];
+    connection.query("SELECT title FROM roles", (err, results) => {
+        console.log(results);
+        results.forEach(title => {
+            roleTitlesArr.push(title.title);
+        })
+        updateRoleQuestions(roleTitlesArr);
+    })
+}
+
+function updateRoleQuestions(roleTitlesArr) {
     inquirer.prompt([
         {
             type: 'input',
@@ -304,23 +320,24 @@ function updateRoleQuestions() {
             type: 'list',
             message: "What is the employee's new role?",
             name: 'new',
-            choices: ["Lead Engineer", "Software Engineer", "Sales Lead", "Salesperson", "Accountant", "Financial Analyst"]
+            choices: roleTitlesArr
         }
     ])
         .then(answers => {
             console.table(answers);
-            updateEmployeeRole(answers);
+            var roleID = roleTitlesArr.indexOf(answers.new) + 1;
+            updateEmployeeRole(answers, roleID);
         })
 }
 
-function updateEmployeeRole(data) {
+function updateEmployeeRole(data, role) {
     connection.query(
         // I don't quite understand this yet... look at this first tomorrow
         // I think I need to use the Foreign Key Peter told me about
         "UPDATE employees SET ? WHERE ? AND ?",
         [
             {
-                role_id: role_id
+                role_id: role
             },
             {
                 first_name: data.first
