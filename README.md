@@ -8,25 +8,23 @@
 
   ## Table of Contents
 
-  [Installation](#installation)
+  - [Installation](#installation)
   
-  [Usage](#usage)
+  - [Usage](#usage)
   
-  [Contributing](#contributing)
-  
-  [Tests](#tests)
-  
-  [License](#license)
+  - [License](#license)
 
-  [Questions](#questions)
+  - [Questions](#questions)
 
   ## Installation
 
   Node.js must be installed, as well inquirer and mysql dependencies. From there, the user may run the command `npm start` and answer the prompts.
 
-  ## Usage
+  ## Usage  
 
-  Follow the prompts given, or refer to the provided demo video below:
+  ![start-command](./assets/images/start-command.png)
+
+  After typing `npm start`, follow the prompts given, or refer to the provided demo video below:
 
   ## License
 
