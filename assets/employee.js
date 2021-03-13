@@ -1,10 +1,10 @@
 class Employee {
-    constructor (id, firstName, lastName, roleID, managerID) {
+    constructor (id, firstName, lastName, role_id, manager_id) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.roleID = roleID;
-        this.managerID = managerID;
+        this.role_id = role_id;
+        this.manager_id = manager_id;
     }
 };
 
