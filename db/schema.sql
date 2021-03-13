@@ -17,7 +17,8 @@ CREATE TABLE roles(
     -- to hold reference to department role belongs to
     -- trying different method without using auto_increment
     department_id INT(4) NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
 CREATE TABLE employees(
@@ -28,6 +29,14 @@ CREATE TABLE employees(
     -- to hold reference to another employee who manages the employee being Created. This field may be null if the employee has no manager
     manager_id INT(4) NULL,
     FOREIGN KEY (role_id) REFERENCES roles(id),
+    FOREIGN KEY (manager_id) REFERENCES managers(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE managers(
+    id INT auto_increment NOT NULL,
+    first_name VARCHAR(30),
+    last_name VARCHAR(30),
     PRIMARY KEY(id)
 );
 

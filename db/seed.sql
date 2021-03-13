@@ -15,8 +15,6 @@ USE company_db;
 -- VALUES ("Jeff","Johnson", "2","1"), ("Billy", "Budd", 1, 5), ("Shelly", "Manne", 4, 5), ("Phil", "Coulson", 5, 4);
 
 
-
-
 -- ### Alternative way to insert more than one row
 -- INSERT INTO products (flavor, price, quantity)
 -- VALUES ("vanilla", 2.50, 100), ("chocolate", 3.10, 120), ("strawberry", 3.25, 75);

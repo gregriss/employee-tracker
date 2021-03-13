@@ -37,7 +37,8 @@ function beginQuestions() {
             type: "list",
             message: "What would you like to do?",
             name: "begin",
-            choices: ["Add a Department", "Add a Role", "Add an Employee", "View All Departments", "View All Roles", "View All Employees", "Update Employee Role", "End","Remove a Department", "Remove a Role", "Remove Employee", "Update Employee Manager","View All Employees By Manager"] // will have View All Employees by Department
+            choices: ["Add a Department", "Add a Role", "Add an Employee", "View All Departments", "View All Roles", "View All Employees", "Update Employee Role", "End"] 
+            // will have View All Employees by Department // "Remove a Department", "Remove a Role", "Remove Employee", "Update Employee Manager","View All Employees By Manager"
         }
     ])
         .then(answer => {
@@ -167,13 +168,6 @@ function addEmployeeQuestions() {
         // }
     ])
         .then(answers => {
-            // console.log(answers);
-            // const employee = new Employee(answers.first, answers.last, answers.role); // add answers.manager
-            // employeesArr.push(employee);
-            // const values = [
-            //     [answers.first, answers.last, answers.role, answers.manager]
-            // ];
-            // console.table(['First Name', 'Last Name', 'Role','Manager'], values);
             createEmployee(answers);
         });
 };
@@ -189,7 +183,6 @@ function createDepartment(data) {
             if (err) throw err;
             console.log(res.affectedRows + " Department inserted!\n");
             beginQuestions();
-            // connection.end();
         }
     );
 }
@@ -201,7 +194,7 @@ function createRole(data) {
         {
             title: data.title,
             salary: data.salary,
-            role: data.role
+            // role: data.role
             // department_id: 
         },
         function (err, res) {
@@ -226,21 +219,11 @@ function createEmployee(data) {
             {
                 first_name: data.first,
                 last_name: data.last,
-                role_id
+                // role_id
             }
         ],
-        // {
-        //     first_name: data.first,
-        //     last_name: data.last,
-        //     // role_id: role_id
-        //     // manager_id: data.manager
-        // },
         (err, res) => {
             if (err) throw err;
-            // const values = [[data.first, data.last, data.role]] // add data.manager
-            //     console.table(['First Name', 'Last Name','Role'], values); // add 'Manager'
-            //     console.log(res.affectedRows + " Role inserted!\n");
-            beginQuestions();
             connection.query(
                 "SELECT id FROM roles WHERE title = ?",
                 {
@@ -280,7 +263,7 @@ function viewRoles() {
 // client_id is what they have in common, so that's what we use for our join
 // SELECT client_name, party_name FROM clients c JOIN parties p ON c.id = p.client_id;
 function viewEmployees() {
-    connection.query("SELECT * FROM employees", function (err, res) {
+    connection.query("SELECT first_name, last_name, role_id FROM employees", function (err, res) {
         if (err) throw err;
         // let role = null;
         // if (role_id = 1) {
@@ -349,7 +332,8 @@ function updateEmployeeRole(data, role) {
         function (err, res) {
             if (err) throw err;
             console.table(res.affectedRows + " role updated!\n");
-            connection.end();
+            // connection.end();
+            beginQuestions();
         }
     )
 };
